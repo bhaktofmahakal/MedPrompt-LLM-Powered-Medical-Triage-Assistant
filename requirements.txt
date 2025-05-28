@@ -1,0 +1,11 @@
+fastapi==0.110.0
+uvicorn==0.29.0
+requests==2.31.0
+python-multipart==0.0.9
+langchain==0.3.25
+langchain-community==0.3.24
+langchain-openai==0.3.18
+faiss-cpu==1.11.0
+pypdf==5.5.0
+biopython==1.85
+sentence-transformers==4.1.0

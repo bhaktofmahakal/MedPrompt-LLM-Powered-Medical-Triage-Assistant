@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedPrompt: Medical Triage Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+            --danger-color: #e74c3c;
+            --urgent-color: #e67e22;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-color);
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .input-section {
+            text-align: center;
+        }
+        
+        .input-container {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: var(--transition);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            height: 100%;
+        }
+        
+        .result-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .result-header {
+            padding: 1rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-header i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .result-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .result-body {
+            padding: 1.5rem;
+            text-align: left;
+        }
+        
+        .severity {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .emergency { 
+            background-color: var(--danger-color); 
+            color: white; 
+        }
+        
+        .urgent { 
+            background-color: var(--urgent-color); 
+            color: white; 
+        }
+        
+        .semi-urgent { 
+            background-color: var(--warning-color); 
+            color: var(--dark-color); 
+        }
+        
+        .routine { 
+            background-color: var(--primary-color); 
+            color: white; 
+        }
+        
+        .self-care { 
+            background-color: var(--success-color); 
+            color: white; 
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+            color: var(--secondary-color);
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+        
+        .loading {
+            display: none;
+            margin: 2rem auto;
+            text-align: center;
+        }
+        
+        .loading p {
+            margin-top: 1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .loading-subtext {
+            font-size: 0.9rem;
+            color: #6c757d !important;
+            font-weight: 400 !important;
+            margin-top: 0.5rem !important;
+        }
+        
+        .progress-container {
+            width: 80%;
+            max-width: 400px;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 1.5rem auto;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            animation: progress-animation 60s linear forwards;
+        }
+        
+        @keyframes progress-animation {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        .pulse {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .pulse div {
+            position: absolute;
+            border: 4px solid var(--primary-color);
+            opacity: 1;
+            border-radius: 50%;
+            animation: pulse 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+        }
+        
+        .pulse div:nth-child(2) {
+            animation-delay: -0.5s;
+        }
+        
+        @keyframes pulse {
+            0% {
+                top: 36px;
+                left: 36px;
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                top: 0px;
+                left: 0px;
+                width: 72px;
+                height: 72px;
+                opacity: 0;
+            }
+        }
+        
+        .disclaimer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .placeholder-text {
+            color: #adb5bd;
+            font-style: italic;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+        
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+        
+        .notification i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Responsive adjustments */
+        /* Footer styles */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            color: #6c757d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .github-link i {
+            margin-right: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .github-link:hover {
+            color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .made-with-love {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 576px) {
+            .header {
+                padding: 1.5rem 0;
+                border-radius: 0;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .notification {
+                left: 20px;
+                right: 20px;
+                max-width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-heartbeat"></i> MedPrompt</h1>
+            <p>Advanced AI-powered medical triage assistant for symptom analysis and care recommendations</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card input-section">
+            <h2><i class="fas fa-stethoscope"></i> Symptom Analysis</h2>
+            <p>Describe your symptoms in detail for an AI-powered health assessment</p>
+            
+            <div class="input-container">
+                <textarea id="symptoms" placeholder="Enter your symptoms in detail (e.g., I've had a severe headache for 3 days with fever and neck stiffness)..."></textarea>
+            </div>
+            
+            <button class="btn" onclick="analyzeSymptoms()">
+                <i class="fas fa-search-plus"></i> Analyze Symptoms
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="pulse"><div></div><div></div></div>
+            <p>Analyzing symptoms and retrieving medical information...</p>
+            <p class="loading-subtext">This may take up to 1 minute as our AI analyzes your symptoms in detail.</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+        
+        <div class="results-container">
+            <div class="result-card" id="response-card">
+                <div class="result-header">
+                    <i class="fas fa-notes-medical"></i>
+                    <h2>AI Health Analysis</h2>
+                </div>
+                <div class="result-body" id="response">
+                    <p class="placeholder-text">Your AI-generated health insights will appear here...</p>
+                </div>
+            </div>
+            
+            <div class="result-card" id="triage-card">
+                <div class="result-header">
+                    <i class="fas fa-hospital-user"></i>
+                    <h2>Triage Assessment</h2>
+                </div>
+                <div class="result-body" id="triage-info">
+                    <p class="placeholder-text">Care recommendations will appear here...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <i class="fas fa-exclamation-circle"></i>
+            <p><strong>Medical Disclaimer:</strong> This tool is for informational purposes only and does not provide medical advice. Always consult with a qualified healthcare provider for medical concerns.</p>
+        </div>
+        
+        <div class="footer">
+            <a href="https://github.com/bhaktofmahakal" target="_blank" class="github-link">
+                <i class="fab fa-github"></i> github.com/bhaktofmahakal
+            </a>
+            <div class="made-with-love">
+                Made with <i class="fas fa-heart" style="color: #e74c3c;"></i> by Utsav Mishra
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cache DOM elements for better performance
+        const elements = {
+            symptoms: document.getElementById("symptoms"),
+            response: document.getElementById("response"),
+            triageInfo: document.getElementById("triage-info"),
+            loading: document.getElementById("loading"),
+            responseCard: document.getElementById("response-card"),
+            triageCard: document.getElementById("triage-card"),
+            progressBar: document.getElementById("progress-bar")
+        };
+        
+        // Debounce function to limit API calls
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+        
+        async function analyzeSymptoms() {
+            const symptomsInput = elements.symptoms.value;
+            
+            if (!symptomsInput.trim()) {
+                showNotification("Please enter your symptoms", "warning");
+                elements.symptoms.focus();
+                return;
+            }
+            
+            // Show loading indicator with animation
+            elements.loading.style.display = "block";
+            elements.response.innerHTML = "<p class='placeholder-text'>Analyzing...</p>";
+            elements.triageInfo.innerHTML = "<p class='placeholder-text'>Processing...</p>";
+            
+            // Reset and restart progress bar animation
+            elements.progressBar.style.animation = 'none';
+            // Trigger reflow
+            void elements.progressBar.offsetWidth;
+            elements.progressBar.style.animation = 'progress-animation 60s linear forwards';
+            
+            // Show notification to user
+            showNotification("Analysis started. This may take up to 1 minute for complex symptoms.", "info");
+            
+            // Remove previous animation classes if any
+            elements.responseCard.classList.remove("fade-in");
+            elements.triageCard.classList.remove("fade-in");
+            
+            let formData = new FormData();
+            formData.append("symptoms", symptomsInput);
+
+            try {
+                // Use Promise.race to implement a timeout (60 seconds for LLM processing)
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => {
+                        // Show notification before rejecting
+                        showNotification("Analysis is taking longer than expected. Please wait or try a shorter description.", "warning");
+                        // Wait a moment before actually timing out
+                        setTimeout(() => reject(new Error("Request timed out")), 5000);
+                    }, 60000)
+                );
+                
+                const fetchPromise = fetch("/analyze_symptoms", {
+                    method: "POST",
+                    body: formData
+                });
+                
+                const response = await Promise.race([fetchPromise, timeoutPromise]);
+                
+                // Hide loading indicator
+                elements.loading.style.display = "none";
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Format and display the AI response with animation
+                elements.response.innerHTML = `
+                    <div>${formatResponse(data.response)}</div>
+                `;
+                
+                // Format and display the triage information with animation
+                if (data.triage) {
+                    const severityClass = data.triage.severity.replace('_', '-');
+                    elements.triageInfo.innerHTML = `
+                        <div class="severity ${severityClass}">${capitalizeFirstLetter(data.triage.severity)}</div>
+                        <h3 class="section-title">Recommended Care</h3>
+                        <p>${formatCarePathway(data.triage.care_pathway)}</p>
+                        <h3 class="section-title">Instructions</h3>
+                        <p>${data.triage.instructions}</p>
+                    `;
+                }
+                
+                // Add animation classes
+                elements.responseCard.classList.add("fade-in");
+                elements.triageCard.classList.add("fade-in");
+                
+                // Scroll to results
+                elements.responseCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+            } catch (error) {
+                elements.loading.style.display = "none";
+                
+                if (error.message === "Request timed out") {
+                    elements.response.innerHTML = `
+                        <div style='color: var(--urgent-color);'>
+                            <p><i class="fas fa-clock"></i> <strong>Analysis Timeout</strong></p>
+                            <p>The analysis is taking longer than expected.</p>
+                            <p>This can happen with complex symptoms or during high server load.</p>
+                            <p>Please try again with a more concise description of your main symptoms.</p>
+                        </div>
+                    `;
+                    
+                    // Add default triage information for timeout case
+                    elements.triageInfo.innerHTML = `
+                        <div class="severity self-care">Self-care</div>
+                        <h3 class="section-title">Recommended Care</h3>
+                        <p><i class="fas fa-house"></i> Self Management</p>
+                        <h3 class="section-title">Instructions</h3>
+                        <p>Your symptoms can likely be managed at home with rest and over-the-counter remedies. If symptoms persist or worsen, consult a healthcare provider.</p>
+                    `;
+                } else {
+                    elements.response.innerHTML = `
+                        <div style='color: var(--danger-color);'>
+                            <p><i class="fas fa-exclamation-triangle"></i> <strong>Error:</strong> ${error.message}</p>
+                            <p>Please try again or check your connection.</p>
+                        </div>
+                    `;
+                    
+                    // Add default triage information for error case
+                    elements.triageInfo.innerHTML = `
+                        <div style='color: var(--danger-color);'>
+                            <p><i class="fas fa-exclamation-triangle"></i> <strong>Triage Assessment Unavailable</strong></p>
+                            <p>We couldn't complete the triage assessment due to an error.</p>
+                            <p>Please try again or contact support if the issue persists.</p>
+                        </div>
+                    `;
+                }
+                
+                // Add animation classes even in error cases
+                elements.responseCard.classList.add("fade-in");
+                elements.triageCard.classList.add("fade-in");
+                
+                console.error("Analysis error:", error);
+            }
+        }
+        
+        function formatResponse(text) {
+            if (!text) return "No response received";
+            
+            // Replace newlines with HTML breaks
+            let formatted = text.replace(/\n/g, '<br>');
+            
+            // Bold the headers (numbered or bulleted points)
+            formatted = formatted.replace(/(\d+\.\s+|\*\s+)([^:]+:)/g, '$1<strong>$2</strong>');
+            
+            // Highlight important warnings
+            formatted = formatted.replace(/(warning|caution|important|note):/gi, '<span style="color: var(--urgent-color); font-weight: bold;">$&</span>');
+            
+            return formatted;
+        }
+        
+        function formatCarePathway(pathway) {
+            if (!pathway) return "No recommendation available";
+            // Convert snake_case to readable format with icon
+            const formattedText = pathway.split('_').map(capitalizeFirstLetter).join(' ');
+            
+            // Add appropriate icon based on pathway
+            let icon = "fa-hospital";
+            if (pathway.includes("emergency")) icon = "fa-truck-medical";
+            else if (pathway.includes("urgent")) icon = "fa-house-medical";
+            else if (pathway.includes("primary")) icon = "fa-user-doctor";
+            else if (pathway.includes("telehealth")) icon = "fa-video";
+            else if (pathway.includes("self")) icon = "fa-house";
+            
+            return `<i class="fas ${icon}"></i> ${formattedText}`;
+        }
+        
+        function capitalizeFirstLetter(string) {
+            if (!string) return "";
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        
+        function showNotification(message, type = "info") {
+            // Simple notification function
+            alert(message);
+        }
+        
+        // Add event listener for Enter key in textarea
+        elements.symptoms.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && event.ctrlKey) {
+                event.preventDefault();
+                analyzeSymptoms();
+            }
+        });
+        
+        // Add placeholder text that explains the Ctrl+Enter shortcut
+        elements.symptoms.placeholder += " (Press Ctrl+Enter to analyze)";
+    </script>
+</body>
+</html>
+
+
