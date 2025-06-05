@@ -14,6 +14,10 @@ MedPrompt is a sophisticated medical triage assistant powered by Large Language 
 - **Pediatric Symptom Recognition**: Specialized patterns for recognizing and appropriately triaging children's symptoms
 - **Chronic Condition Management**: Intelligent assessment of worsening chronic conditions like asthma, diabetes, and chronic pain
 
+
+---
+
+
 ## 🔬 Technical Architecture
 
 ### 1. RAG (Retrieval-Augmented Generation) Pipeline
@@ -43,6 +47,10 @@ MedPrompt is a sophisticated medical triage assistant powered by Large Language 
 - **Health Monitoring**: Includes health check endpoints for system monitoring
 - **Static File Serving**: Efficiently serves the frontend application
 
+
+---
+
+
 ## 📊 Triage Classification System
 
 MedPrompt classifies symptoms into five severity levels:
@@ -55,7 +63,12 @@ MedPrompt classifies symptoms into five severity levels:
 | **Routine** | Non-urgent conditions requiring medical attention | Telehealth | Medication refills, mild symptoms, follow-up care |
 | **Self-Care** | Minor conditions that can be managed at home | Self-Management | Common cold, minor headaches, mild allergies |
 
+---
+
 ## 🚀 Installation & Setup
+
+<details>
+<summary>click to view</summary>
 
 ### Prerequisites
 - Python 3.8+
@@ -125,7 +138,14 @@ Test the application with these symptom scenarios to evaluate its performance:
 - "My child has a rash that doesn't blanch when pressed"
 - "My baby seems lethargic and isn't feeding normally"
 
+</details>
+
+---
+
 ## 📁 Project Structure
+
+<details>
+<summary>click to view</summary>
 
 ```
 medical_ai_symptom_checker/
@@ -140,8 +160,14 @@ medical_ai_symptom_checker/
 ├── pubmed_cache/          # Cache directory for PubMed data
 └── .vscode/               # VS Code configuration
 ```
+</details>
+
+---
 
 ## 🔧 Advanced Configuration
+
+<details>
+<summary>click to view</summary>
 
 ### Memory Optimization
 For systems with limited RAM, you can adjust these parameters in app.py:
@@ -168,11 +194,17 @@ Set your email for the PubMed API in pubmed_rag.py:
 Entrez.email = "your-email@example.com"
 ```
 
+</details>
+
+---
+
 ## ⚠️ Medical Disclaimer
 
 **IMPORTANT**: MedPrompt is designed for informational purposes only and does not provide medical diagnosis, advice, or treatment. The triage recommendations are based on pattern matching and AI analysis, which may not capture all medical nuances or individual circumstances.
 
 Always consult with a qualified healthcare provider for medical concerns. In case of emergency, call emergency services (911 in the US) or go to your nearest emergency room immediately.
+
+---
 
 ## 📄 License
 
@@ -183,14 +215,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Utsav Mishra - Initial development and design
 
 ## 🙏 Acknowledgments
-
-- MedLLaMA 2 team for the specialized medical language model
-- PubMed for providing access to medical literature
-- Ollama for enabling local LLM inference
-- FastAPI for the efficient web framework
-- The open-source community for various libraries and tools
-
----
 
 <p align="center">
   <img src="https://img.shields.io/badge/Made%20with-Python-blue?style=for-the-badge&logo=python&logoColor=white" alt="Made with Python">
