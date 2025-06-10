@@ -64,6 +64,19 @@ MedPrompt classifies symptoms into five severity levels:
 | **Self-Care** | Minor conditions that can be managed at home | Self-Management | Common cold, minor headaches, mild allergies |
 
 ---
+## 🌟 Screenshots
+
+<div align="center">
+  <img src="med ai/Screenshot 2025-06-10 124751.png" alt="Chat Interface" width="80%" style="border:1px solid #ccc; border-radius:10px;" />
+  <p><em>Responsive, real-time AI Coder system for users.</em></p>
+</div>
+<div align="center">
+  <img src="med ai/Screenshot 2025-06-10 124802.png" alt="Chat Interface" width="80%" style="border:1px solid #ccc; border-radius:10px;" />
+  <p><em>Responsive, real-time AI Code Companion system for users.</em></p>
+</div>
+
+
+---
 
 ## 🚀 Installation & Setup
 
