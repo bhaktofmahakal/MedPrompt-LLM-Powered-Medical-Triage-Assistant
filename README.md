@@ -67,7 +67,7 @@ MedPrompt classifies symptoms into five severity levels:
 ## 🌟 Screenshots
 
 <div align="center">
-  <img src="med ai/Screenshot 2025-06-10 124751.png" alt="Chat Interface" width="80%" style="border:1px solid #ccc; border-radius:10px;" />
+  <img src="med ai/Screenshot 2025-06-10 124847.png" alt="Chat Interface" width="80%" style="border:1px solid #ccc; border-radius:10px;" />
   <p><em>Responsive, real-time AI Coder system for users.</em></p>
 </div>
 <div align="center">
