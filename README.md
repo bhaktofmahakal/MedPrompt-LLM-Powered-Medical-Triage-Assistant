@@ -158,7 +158,7 @@ medical_ai_symptom_checker/
 │   ├── style.css          # CSS styles (placeholder)
 │   └── script.js          # JavaScript functionality (placeholder)
 ├── pubmed_cache/          # Cache directory for PubMed data
-└── .vscode/               # VS Code configuration
+
 ```
 </details>
 
