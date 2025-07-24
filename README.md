@@ -4,7 +4,8 @@
 
 MedPrompt is a sophisticated medical triage assistant powered by Large Language Models (LLMs) that analyzes patient-reported symptoms and provides evidence-based care recommendations. By combining advanced NLP capabilities with medical knowledge retrieval, MedPrompt helps users understand the potential severity of their symptoms and directs them to appropriate care pathways.
 
-🔗 [View on ReadyTensor](https://app.readytensor.ai/publications/medprompt-ai-powered-medical-triage-assistant-H6JIxMU75cym)
+🔗 **Live on ReadyTensor:** [Click here](https://app.readytensor.ai/publications/code-companion-personal-ai-coder-agent-N3diPAMn0uLp)
+
 
 
 ## 🌟 Key Features
